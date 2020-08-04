@@ -27,8 +27,8 @@
 
 ## 強化学習
 - TD学習
-- Q学習
-- Sarsa
+  - Q学習
+  - SARSA
 
 ---
 
@@ -78,6 +78,15 @@ https://www.slideshare.net/HirotakaHachiya/14-122960312
 
 ---
 
+- TD 学習
+  - TD(0) 法
+  - $n$ ステップ TD 法
+  - TD(λ) 法
+    - Forward view
+    - Backward view
+  - Q 学習
+  - SARSA
+
 https://qiita.com/shionhonda/items/ec05aade07b5bea78081
 https://qiita.com/triwave33/items/277210c7be4e47c28565
 - 強化学習は動的計画法、モンテカルロ法、TD学習に分類される
@@ -97,13 +106,15 @@ $$
 - http://yagami12.hatenablog.com/entry/2019/02/22/210608
 - TD(0)法において報酬をnステップ先まで拡張したもの
 $$
-V(s_{t}) \larr V(s_{t}) + \alpha \{R_t^{(n)} - V(s_{t})\} \\
+V(s_{t}) \larr V(s_{t}) + \alpha \{R_t^{(n)} - V(s_{t})\} \\ 
 R_t^{(n)} = R_{t+1}+\gamma R_{t+2} + \gamma^2 R_{t+3} + ... + \gamma^{n-1} R_{t+n} + \gamma^n V(s_{t+n})
 $$
 
 #### TD(λ)法
 - https://qiita.com/sconeman/items/b1aacfa924e52102e9d6
 - https://yamaimo.hatenablog.jp/entry/2015/12/11/200000
+##### Forward view
+- モンテカルロ法同様、エピソード完了まで学習できない
 - 以下のn個の報酬を考える
   - $R_t^{(1)} = R_{t+1} + \gamma V(s_{t+!})$
   - $R_t^{(2)} = R_{t+1} + \gamma R_{t+2} + \gamma^2 V(s_{t+!})$
@@ -111,12 +122,31 @@ $$
   - $R_t^{(n)} = R_{t+1}+\gamma R_{t+2} + \gamma^2 R_{t+3} + ... + \gamma^{n-1} R_{t+n} + \gamma^n V(s_{t+n})$
 - これらを$\lambda^{n-1}(0<\lambda<1)$で重み付けする（近いステップの報酬を重視するため）
 $$R_t^{(1)} + \lambda R_t^{(2)} + \lambda^2 R_t^{(3)} + ...$$
-- $R_t^{(n)}$の係数について、$1+\lambda+\lambda^2+...\to \frac{1}{1-\lambda}$なので、正規化するために$1-\lambda$をかけて、これを収益とする
+- $R_t^{(n)}$の係数について、$1+\lambda+\lambda^2+...\to \frac{1}{1-\lambda}$なので、正規化するために$(1-\lambda)$をかけて、これを収益とする
 $$R_t^{\lambda} = (1-\lambda)\sum_{n=1}^{T-t-1}\lambda^{n-1}R_t^{(n)} + \lambda^{T-t-1}R_t$$
   - 時間ステップ$T$を終端とする
   - $R_t$：終端に達した後のnステップ収益
   - $\lambda=0$のとき、$R_t^{\lambda}=R_t^{(1)}$：TD(0)法
   - $\lambda=1$のとき、$R_t^{\lambda}=R_t$：モンテカルロ法
+##### Backward view
+- http://incompleteideas.net/book/first/ebook/node75.html
+- 1ステップ毎に全状態を更新する
+- Eligibility traces （適格度トレース）$E_t(s)$ を導入する
+  - 初期値は0
+$$E_0(s) = 0$$
+  - 現在の状態のときのみ1を足す（$\gamma$：時間割引率、$\lambda$：trace-decay parameter）
+$$
+E_t(s) = \left\{
+\begin{array}{ll}
+\gamma \lambda E_{t-1}(s) & (s \neq s_t) \\
+\gamma \lambda E_{t-1}(s) + 1 & (s = s_t)
+\end{array}
+\right.
+$$
+- 状態価値関数 $V(s)$ を以下の式で更新する
+$$
+V(s) \larr V(s) + \alpha \delta_t E_t(s) \quad (\forall s)
+$$
 
 ###  Q 学習
 - 方策オフ型（off-policy）
@@ -125,12 +155,12 @@ $$R_t^{\lambda} = (1-\lambda)\sum_{n=1}^{T-t-1}\lambda^{n-1}R_t^{(n)} + \lambda^
 
 $$Q(s_t,a_t) \larr Q(s_t,a_t) + \alpha \{R_{t+1}+\gamma \max_a Q(s_{t+1},a)-Q(s_t,a_t)\}$$
 
-### Sarsa
+### SARSA
 - 方策オン型（on-policy）
 - 行動価値関数$Q(s,a)$を以下の式で更新する
 - Q学習と違うのは、Q値の更新に次の行動$a_t$に対応する$Q(s_t,a_t)$を使うかどうか
   - Q学習：更新→行動選択
-  - Sarsa：行動選択→更新
+  - SARSA：行動選択→更新
 
 $$Q(s_t,a_t) \larr Q(s_t,a_t) + \alpha \{R_{t+1}+\gamma Q(s_{t+1},a_{t+1})-Q(s_t,a_t)\}$$
 
