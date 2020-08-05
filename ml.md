@@ -130,7 +130,7 @@ $$R_t^{\lambda} = (1-\lambda)\sum_{n=1}^{T-t-1}\lambda^{n-1}R_t^{(n)} + \lambda^
   - $\lambda=1$のとき、$R_t^{\lambda}=R_t$：モンテカルロ法
 ##### Backward view
 - http://incompleteideas.net/book/first/ebook/node75.html
-- 1ステップ毎に全状態を更新する
+- 1ステップ毎に全状態を更新する（これがForwardと違うところ）
 - Eligibility traces （適格度トレース）$E_t(s)$ を導入する
   - 初期値は0
 $$E_0(s) = 0$$
