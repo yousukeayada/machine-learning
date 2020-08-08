@@ -165,6 +165,3 @@ $$Q(s_t,a_t) \larr Q(s_t,a_t) + \alpha \{R_{t+1}+\gamma \max_a Q(s_{t+1},a)-Q(s_
 $$Q(s_t,a_t) \larr Q(s_t,a_t) + \alpha \{R_{t+1}+\gamma Q(s_{t+1},a_{t+1})-Q(s_t,a_t)\}$$
 
 
-
-sklearnデータセット作成方法
-https://null-text.org/?p=2448
