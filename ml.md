@@ -14,6 +14,8 @@
 - ランダムフォレスト
 - ニューラルネットワーク 
 - k近傍法（kNN）
+- XGBoost
+- LightGBM
 
 ## 教師なし学習
 - 主成分分析（PCA）
@@ -71,10 +73,20 @@ https://avinton.com/academy/naive-bayes/
 https://www.slideshare.net/HirotakaHachiya/14-122960312
 
 ### ランダムフォレスト
+https://qiita.com/takuya_tsurumi/items/23fdc43ee0e54ec7c87e
+- 決定木モデルの応用で、バギングという手法を用いる。
+  - Bootstrap Aggregating（ブートストラップ法）の略。
 
 ### ニューラルネットワーク 
 
 ### k近傍法（kNN）
+
+### XGBoost
+- eXtreme Gradient Boosting
+- 決定木モデルの応用で、ブースティングという手法を用いる。
+- 学習に時間がかかる
+
+### LightGBM
 
 ---
 
