@@ -111,6 +111,10 @@ $$\Delta I = I - \sum_{i=1}^{b}{\frac{n_i}{N} I_i}$$
 - 学習に時間がかかる
 
 ### LightGBM
+https://www.codexa.net/lightgbm-beginner/
+- XGBoost に比べ学習が早い
+  - Leaf-wise を採用している
+  - 学習データをヒストグラム化して計算する
 
 ---
 
