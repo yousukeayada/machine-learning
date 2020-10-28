@@ -339,6 +339,101 @@ Q_{t+1}(s,a) = Q_t(s,a)+\alpha \delta_{t+1}\boldsymbol{1}(S_t=s,A_t=a)$$
   - そこで、観測された系列を溜めておき、Q関数推定時に無作為に抽出するというアイデア。
 
 ---
+## 方策ベース手法
+- 行動空間が高次元、連続でも有効。
+  - 価値ベースでは $Q(s,a)$ の最大値を見つけるために全ての行動に対して計算する必要があったが、方策ベースでは状態 $s$ を入力すると行動 $a$ が出力される。
+- 決定論的方策だけでなく、確率的方策も学習できる。
+- 局所最適解に陥りやすい。
+- バリアンス大。
+
+---
+## 方策のパラメータ表現
+- 入力 $s$ 、出力 $a$ の確率分布関数として方策 $\pi$ をモデル化する。
+  - 例）ギブス方策（$\theta$：パラメータ、$\xi$：特徴量）
+    - 行動空間が離散であるときしか適用できない。
+$$\pi(a|s,\theta) = \frac{exp(\theta  \xi(s,a))}{\sum_{a'}exp(\theta \xi(s,a'))}$$
+
+- 行動空間が連続のときはガウス方策などが考えられる。
+
+---
+## 方策勾配法
+- 最適な方策を学習するためには、方策の更新式、つまりパラメータの更新式が必要。
+- パラメータ $\theta$ の更新式は以下。
+$\theta_{t+1} = \theta_t+\alpha \nabla_{\theta}J(\theta_t)$
+ただし、$J(\theta)$：目的関数、$\nabla_{\theta} \equiv (\frac{\partial}{\partial \theta_1},...,\frac{\partial}{\partial \theta_M})^T$
+
+- 目的関数をどうするか：学習開始時の状態 $s_0$ での期待収益、つまり $\pi(a|s_0,\theta)$ のもとで計算された価値関数 $v_{\pi}(s_0)$ と定義し、これを最大化すればよさそう。
+$J(\theta) = v_{\pi}(s_0) \equiv E_{\pi}[G_t|S_t=s_0]$
+
+---
+## 方策勾配法
+### 方策勾配定理
+$\nabla_{\theta}J(\theta) = E_{\pi}[\nabla_{\theta}\log \pi(a|s,\theta)q_{\pi}(s,a)]$
+- $\pi(a|s,\theta)$：$\theta$ についての尤度
+- $\nabla_{\theta}\log \pi(a|s,\theta)$：スコア関数
+- $q_{\pi}(s,a)$：重み
+
+---
+## 方策勾配法
+### アドバンテージ関数
+$a_{\pi}(s,a) = q_{\pi}(s,a)-v_{\pi}(s)$
+- Q 関数は $s$ と $a$ 両方に依存するため、変数ごとのバリアンスが重なってQ 関数のバリアンスを大きくしている。
+- そこで、状態空間のバリアンスを吸収するベースライン関数 $b(s)(=v_{\pi}(s))$ を導入する。
+
+---
+## 方策勾配法
+### アドバンテージ関数
+$a_{\pi}(s,a) = q_{\pi}(s,a)-v_{\pi}(s)$
+- 方策勾配定理の $q_{\pi}(s,a)$ を $a_{\pi}(s,a)$ に置き換える。
+$\nabla_{\theta}J(\theta) = E_{\pi}[\nabla_{\theta}\log \pi(a|s,\theta)\{q_{\pi}(s,a)-v_{\pi}(s)\}]$
+- 実際にはサンプリングされた系列、推定値で近似する。
+$\nabla_{\theta}J(\theta) \approx \frac{1}{T}\sum_{t=0}^{T-1}\nabla_{\theta}\log \pi(A_t|S_t,\theta)\{Q(S_t,A_t)-V(S_t)\}$
+- Q 関数を TD(0)法の目標値で置き換えると、アドバンテージ関数=TD誤差。モンテカルロ法の収益 $G_t$ で近似すると、REINFORCE アルゴリズム。
+
+---
+## Actor-Critic 法
+- 方策ベース手法が効力を発揮する高次元（連続）な行動空間に対しては、Q 関数も方策同様にパラメータと特徴量によるモデル化が必要。
+- 行動器（Actor）：方策改善を担う。方策 $\pi(a|s,\theta)$ にしたがって行動 $A_t$ をサンプリングする。また、Critic から Q 関数を受け取り、方策パラメータ $\theta$ を更新する。
+- 評価器（Critic）：方策評価を担う。報酬 $R_{t+1}$ をもとに、パラメータ $\omega$ でモデル化された $Q_{\omega}(s,a)$ を学習して $\omega$ を更新する。
+
+---
+## Actor-Critic 法
+![bg right:40% width:500px](actor-critic.png)
+1. Actor は方策 $\pi(a|s,\theta)$ にしたがって行動 $A_t$ をサンプリングする。
+2. Critic は報酬 $R_{t+1}$ をもとに、価値関数のパラメータ $\omega$ を更新する。
+3. Actor は Critic から TD 誤差を受け取り、方策パラメータ $\theta$ を更新する。
+
+---
+## Actor-Critic 法
+### Actor のモデル化
+- 行動空間が連続のときは、ガウス方策によるモデル化が考えられる。
+- 一連の状態・行動系列を生成するとき、RNN によるモデル化が考えられる。
+
+---
+## Actor-Critic 法
+### Critic のモデル化
+- 行動空間がこうじげん（連続）だと、Q 関数の計算が大変なため、実際には価値関数をパラメータ $\omega$ でモデル化した $V_{\omega}(s)$ を学習する。
+- TD 学習を採用するとしたら、二乗和を損失関数とすればよさそう。
+$L_{critic}(\omega) = \sum_{t=0}^{T-1}|\delta_{t+1}(\omega)|^2$
+ただし、$\delta_{t+1}(\omega) = R_{t+1}+\gamma V_{\omega}(S_{t+1})-V_{\omega}(S_t)$
+
+---
+## Actor-Critic 法
+### Critic のモデル化
+- TD 誤差の $\pi$ に関する期待値はアドバンテージ関数に等しくなる。
+$E_{\pi}[\delta] = E_{\pi}[q_{\pi}(s,a)-v_{\pi}(s)], \delta = r+\gamma v(s')-v(s)$
+- よって、Actor の学習に用いる方策勾配法の損失関数は以下。
+$L_{actor}(\theta) = -\frac{1}{T}\sum_{t=0}^{T-1}(\log \pi(A_t|S_t,\theta))\delta_{t+1}(\omega)$
+
+---
+## Actor-Critic 法
+### バッチ学習
+- 1ステップごとに更新すると、価値関数の推計誤差が大きくなり、収束に時間がかかるため、バッチ単位で更新するのが望ましい。
+$$L_{critic}(\omega) = \sum_{t=0}^{T-1}|\delta_{t+1}^{(T-t)}(\omega)|^2\\
+L_{actor}(\theta) = -\frac{1}{T}\sum_{t=0}^{T-1}(\log \pi(A_t|S_t,\theta))\delta_{t+1}^{(T-t)}(\omega)$$
+ただし、$\delta_{t+1}^{(n)} = \delta_{t+1}+\gamma \delta_{t+2}+...+\gamma^{n-1}\delta_{t+n}$
+
+---
 
 ### メモ
 - 行動を表す変数が高次元だったり連続だったりすると、Q学習が難しくなる→行動価値を推定するよりも行動の確率分布を記述する方策を学習するほうが有効→方策勾配法、Actor-Critic

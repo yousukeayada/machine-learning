@@ -4,4 +4,4 @@
   - [HTML](https://yousukeayada.github.io/machine-learning/ml.html)
 - 強化学習まとめ
   - [PDF](https://yousukeayada.github.io/machine-learning/RL/rl.pdf)
-  - [HTTML](https://yousukeayada.github.io/machine-learning/RL/rl.html)
+  - [HTML](https://yousukeayada.github.io/machine-learning/RL/rl.html)
