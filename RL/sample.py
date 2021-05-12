@@ -6,7 +6,10 @@ env = wrappers.Monitor(env, './video', force=True)
 
 state = env.reset()
 
-for i in range(10):
+for step in range(200):
     env.render()
     action = env.action_space.sample()
     state, reward, done, info = env.step(action)
+
+    if done:
+        break

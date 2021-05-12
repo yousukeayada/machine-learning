@@ -114,7 +114,8 @@ $target = R_{t+1}+\gamma Q_{target}(S_{t+1},a_{t+1})$
 
 ---
 ## DQN で CartPole を学習させる
-![bg height:200px right:30%](video/cartpole-v0.gif)
+![bg height:200px right:30%](video/cartpole-v0_random.gif)
+![bg height:200px right:30%](video/cartpole-v0_learned.gif)
 
 - 状態：4変数（カート位置、カート速度、棒の角度、棒の角速度）
 - 行動：2つ（右に押す、左に押す）

@@ -34,7 +34,7 @@ style: |
 - 方策 $\pi(a|s)$：状態 $s$ で行動 $a$ を選択する確率
 - 遷移確率 $p(s'|s,a)$：状態 $s$ で行動 $a$ を選択したとき、状態 $s'$ に遷移する確率
 - 割引報酬和（収益、return）：$\sum_{k=1}^{\infty}\gamma^{k-1}R_{t+k}(0 \lt \gamma \lt 1)$
-![height:100px](rl.png)
+![height:100px](img/rl.png)
 
 ---
 ### 例
@@ -156,7 +156,7 @@ $$V_{t+1}(s) = V_t(s) + \alpha \delta_{t+1}\boldsymbol{1}(S_t=s)$$
 ## TD 学習
 - 現時点の情報のみを使うので、漸化式が価値関数について自己完結的であり、**オンライン学習が可能**。
 
-![](td.png)
+![](img/td.png)
 
 - バイアス大、バリアンス小。
 - 以下の方法でTD学習を改善していく。
@@ -179,7 +179,7 @@ $$V_{t+1}(s) = V_t(s) + \alpha \{G_t^{(n)}-V_t(S_t)\}\boldsymbol{1}(S_t=s)$$
 - $n \rarr \infty$のときモンテカルロ法
 - $n = 1$のときTD学習
 
-![](n-td.png)
+![](img/n-td.png)
 
 ---
 ## TD 学習
@@ -194,7 +194,7 @@ $$V_{t+1}(s) = V_t(s) + \alpha \{G_t^{\lambda}-V_t(S_t)\}\boldsymbol{1}(S_t=s)$$
 ### TD(λ)法
 - $\lambda$-収益 $G_t^{\lambda}$ は時刻 $t$ 以降の１ステップ収益,...,$T-t$ステップ収益を $\lambda$ のべき乗で加重平均したもの。
 
-![](td-lambda.png)
+![](img/td-lambda.png)
 
 - $\lambda = 0$ のとき１ステップTD学習
 - $\lambda = 1$ のときモンテカルロ法
@@ -202,13 +202,13 @@ $$V_{t+1}(s) = V_t(s) + \alpha \{G_t^{\lambda}-V_t(S_t)\}\boldsymbol{1}(S_t=s)$$
 ---
 ## TD 学習
 $V_{t+1}(s) = V_t(s) + \alpha \{R_{t+1}+\gamma V_t(S_{t+1})-V_t(S_t)\}\boldsymbol{1}(S_t=s)$
-![](td.png)
+![](img/td.png)
 
 $V_{t+1}(s) = V_t(s) + \alpha \{G_t^{(n)}-V_t(S_t)\}\boldsymbol{1}(S_t=s)$
-![](n-td.png)
+![](img/n-td.png)
 
 $V_{t+1}(s) = V_t(s) + \alpha \{G_t^{\lambda}-V_t(S_t)\}\boldsymbol{1}(S_t=s)$
-![](td-lambda.png)
+![](img/td-lambda.png)
 
 ---
 ## TD 学習
@@ -398,7 +398,7 @@ $\nabla_{\theta}J(\theta) \approx \frac{1}{T}\sum_{t=0}^{T-1}\nabla_{\theta}\log
 
 ---
 ## Actor-Critic 法
-![bg right:40% width:500px](actor-critic.png)
+![bg right:40% width:500px](img/actor-critic.png)
 1. Actor は方策 $\pi(a|s,\theta)$ にしたがって行動 $A_t$ をサンプリングする。
 2. Critic は報酬 $R_{t+1}$ をもとに、価値関数のパラメータ $\omega$ を更新する。
 3. Actor は Critic から TD 誤差を受け取り、方策パラメータ $\theta$ を更新する。
